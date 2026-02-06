@@ -401,22 +401,6 @@ Each experiment directory contains:
 
 3. **evaluation_results.json**: Detailed per-trace evaluation data
 
-### Hyperparameters
-
-Default hyperparameters used in the paper:
-```python
-{
-    "beta": 1.0,                          # Frequency scaling factor
-    "unseen_penalty": 10.0,               # Penalty for unseen features
-    "cfg_state_penalty_common": 0.0,      # No penalty for common states
-    "cfg_state_penalty_rare": 1.5,        # Penalty for rare states
-    "cfg_state_penalty_unseen": 5.0,      # Penalty for unseen states
-    "cfg_action_penalty_common": 0.0,     # No penalty for common actions
-    "cfg_action_penalty_rare": 2.0,       # Penalty for rare actions
-    "cfg_action_penalty_unseen": 5.0      # Penalty for unseen actions
-}
-```
-
 ### Reproducibility
 
 For reproducibility, all experiments in the paper were run with the following seed values:
