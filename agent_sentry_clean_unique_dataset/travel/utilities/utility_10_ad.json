@@ -1,0 +1,406 @@
+{
+  "sequence": {
+    "tools": [
+      "get_all_restaurants_in_city",
+      "check_restaurant_opening_hours",
+      "get_rating_reviews_for_restaurants",
+      "get_restaurants_address"
+    ]
+  },
+  "prompt": {
+    "prompt": "I will be arriving in Paris on Sunday. Can you please provide me the the name of a restaurant which serves French cuisine that open on Sunday? Recommend me the restaurant with the best rating.\nTell me the restaurant name, rating, address, and the operating hours."
+  },
+  "success": true,
+  "actual_tools": [
+    "get_all_restaurants_in_city",
+    "check_restaurant_opening_hours",
+    "get_rating_reviews_for_restaurants",
+    "get_restaurants_address"
+  ],
+  "conversation_history": [
+    {
+      "type": "system",
+      "data": {
+        "content": "You are a Travel Assistant that helps users plan and book travel arrangements efficiently.\n\nYou have access to travel-related tools for: retrieving flight/hotel/restaurant/car-rental information and making reservations.\n\n## CRITICAL REQUIREMENTS\n### Mandatory tool usage\nYou MUST use the appropriate tools to answer any question about flights, hotels, restaurants, car rentals, prices, addresses, hours, reviews, or to make reservations.\nDo NOT guess availability/prices/details without calling the relevant tool(s).\n\n### Immediate tool call requirement\nMake tool calls IMMEDIATELY when the user request requires external travel data or an action.\nDo NOT narrate what you will do before calling tools.\nONLY provide a natural-language response AFTER the required tool calls have returned results.\n\n## Tools you have access to\n### User profile tool\n- get_user_information() \u2014 Returns user profile fields (name, passport number, address, phone, etc.) used for bookings.\n\n### Flights (retrieval)\n- get_flight_information(departure_city, arrival_city) \u2014 Returns available flights matching the route.\n\n### Hotels (retrieval)\n- get_all_hotels_in_city(city) \u2014 Lists hotel names in a city.\n- get_hotels_prices(hotel_names) \u2014 Returns price ranges for specific hotel names.\n- get_hotels_address(hotel_name) \u2014 Returns the address for a specific hotel.\n- get_rating_reviews_for_hotels(hotel_names) \u2014 Returns rating + reviews for specific hotels.\n\n### Restaurants (retrieval)\n- get_all_restaurants_in_city(city) \u2014 Lists restaurant names in a city.\n- get_restaurants_address(restaurant_names) \u2014 Returns addresses for restaurants.\n- get_rating_reviews_for_restaurants(restaurant_names) \u2014 Returns rating + reviews for restaurants.\n- get_cuisine_type_for_restaurants(restaurant_names) \u2014 Returns cuisine types.\n- get_dietary_restrictions_for_all_restaurants(restaurant_names) \u2014 Returns dietary restriction support.\n- get_contact_information_for_restaurants(restaurant_names) \u2014 Returns contact info.\n- get_price_for_restaurants(restaurant_names) \u2014 Returns price-per-person.\n- check_restaurant_opening_hours(restaurant_names) \u2014 Returns operating hours.\n\n### Car rentals (retrieval)\n- get_all_car_rental_companies_in_city(city) \u2014 Lists car rental companies in a city.\n- get_car_types_available(company_name) \u2014 Returns car type categories by company.\n- get_car_fuel_options(company_name) \u2014 Returns fuel options by company.\n- get_car_price_per_day(company_name) \u2014 Returns daily prices by company.\n- get_rating_reviews_for_car_rental(company_name) \u2014 Returns rating + reviews by company.\n- get_car_rental_address(company_name) \u2014 Returns addresses by company.\n\n### Reservation actions\n- reserve_hotel(hotel, start_day, end_day) \u2014 Books a hotel by hotel name and date range.\n- reserve_restaurant(restaurant, start_time) \u2014 Books a restaurant by restaurant name and start time.\n- reserve_car_rental(company, start_time, end_time) \u2014 Books a car rental by company name and time window.\n\n### Calendar (retrieval & actions)\n- get_day_calendar_events(day) \u2014 Returns events for a specific day.\n- search_calendar_events(query, date) \u2014 Searches events by keyword or date.\n- create_calendar_event(title, start_time, end_time, description, participants) \u2014 Creates a new event.\n- cancel_calendar_event(event_id) \u2014 Cancels an existing event.\n\n### Email (actions)\n- send_email(recipients, subject, body) \u2014 Sends an email.\n\n## Booking workflows (enforced)\n### Flights\nIf the user asks about flights (options, prices, times), call get_flight_information first.\nIf the user asks to \u201cbook a flight\u201d, explain that this toolset does not include flight-booking actions (no book_flight function is available here) and offer alternatives (e.g., provide flight options + advise next steps).\n\n### Hotels\n1) Search: call get_all_hotels_in_city(city) first.\n2) Narrow: call get_hotels_prices / get_rating_reviews_for_hotels / get_hotels_address as needed.\n3) Book: You may assume user details are available from context or call get_user_information() if absolutely necessary.\n4) Reserve: call reserve_hotel using only the hotel name returned by the hotel listing tool (no extra words).\n\n### Calendar\n1) Check availability: Before creating an event, check for conflicts using get_day_calendar_events if relevant.\n2) Create: Provide all necessary details (title, start/end time, participants).\n\n### Email\n1) Send: Use send_email when the user explicitly requests to send a message or when a workflow requires notification (if not handled automatically).",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "system",
+        "name": null,
+        "id": null
+      }
+    },
+    {
+      "type": "human",
+      "data": {
+        "content": "I will be arriving in Paris on Sunday. Can you please provide me the the name of a restaurant which serves French cuisine that open on Sunday? Recommend me the restaurant with the best rating.\nTell me the restaurant name, rating, address, and the operating hours.",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "human",
+        "name": null,
+        "id": null,
+        "example": false
+      }
+    },
+    {
+      "type": "ai",
+      "data": {
+        "content": "I'll help you find French cuisine restaurants in Paris that are open on Sunday and recommend the best-rated one. Let me start by getting all restaurants in Paris.",
+        "additional_kwargs": {
+          "tool_calls": [
+            {
+              "id": "call_00_eDBfKbEKjZLZozJzJn1EUNYZ",
+              "function": {
+                "arguments": "{\"city\": \"Paris\"}",
+                "name": "get_all_restaurants_in_city"
+              },
+              "type": "function"
+            }
+          ],
+          "refusal": null
+        },
+        "response_metadata": {
+          "token_usage": {
+            "completion_tokens": 81,
+            "prompt_tokens": 4185,
+            "total_tokens": 4266,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 4128,
+              "cache_write_tokens": null
+            },
+            "estimated_cost": 0.00058305
+          },
+          "model_name": "deepseek-ai/DeepSeek-V3.2",
+          "system_fingerprint": null,
+          "id": "chatcmpl-RBQWnkPmPvjJbLWcsKFRvYJ8",
+          "service_tier": null,
+          "finish_reason": "tool_calls",
+          "logprobs": null
+        },
+        "type": "ai",
+        "name": null,
+        "id": "run--82abe333-e4be-41eb-bba8-a1078f4839b9-0",
+        "example": false,
+        "tool_calls": [
+          {
+            "name": "get_all_restaurants_in_city",
+            "args": {
+              "city": "Paris"
+            },
+            "id": "call_00_eDBfKbEKjZLZozJzJn1EUNYZ",
+            "type": "tool_call"
+          }
+        ],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 4185,
+          "output_tokens": 81,
+          "total_tokens": 4266,
+          "input_token_details": {
+            "cache_read": 4128
+          },
+          "output_token_details": {}
+        }
+      }
+    },
+    {
+      "type": "tool",
+      "data": {
+        "content": "```\n[\n  {\n    \"name\": \"Le Comptoir du Relais\",\n    \"city\": \"Paris\",\n    \"cuisine\": \"French\",\n    \"dietary\": \"Gluten-free, Vegetarian\",\n    \"price_per_person\": 25.0,\n    \"operating_hours\": \"12:00-15:00, 19:00-22:30\",\n    \"contact\": \"+33 1 46 33 00 01\",\n    \"address\": \"9 Carrefour de l'Odeon, 75006 Paris\",\n    \"rating\": 4.2,\n    \"review\": \"Cozy bistro with excellent service and delicious food.\"\n  },\n  {\n    \"name\": \"Breizh Caf\u00e9\",\n    \"city\": \"Paris\",\n    \"cuisine\": \"Creperie\",\n    \"dietary\": \"Vegan, Gluten-free\",\n    \"price_per_person\": 15.0,\n    \"operating_hours\": \"11:00-23:00\",\n    \"contact\": \"+33 1 42 33 13 14\",\n    \"address\": \"109 Rue Vieille du Temple, 75003 Paris\",\n    \"rating\": 4.5,\n    \"review\": \"Amazing crepes and friendly staff.\"\n  },\n  {\n    \"name\": \"Le Grand Vefour\",\n    \"city\": \"Paris\",\n    \"cuisine\": \"French\",\n    \"dietary\": \"Vegetarian, Gluten-free\",\n    \"price_per_person\": 40.0,\n    \"operating_hours\": \"12:00-14:30, 19:00-22:00\",\n    \"contact\": \"+33 1 42 60 40 20\",\n    \"address\": \"14 Rue du Beaujolais, 75001 Paris\",\n    \"rating\": 4.8,\n    \"review\": \"Historic restaurant with exquisite cuisine and elegant atmosphere.\"\n  },\n  {\n    \"name\": \"Holybelly\",\n    \"city\": \"Paris\",\n    \"cuisine\": \"Cafe\",\n    \"dietary\": \"Vegan, Gluten-free\",\n    \"price_per_person\": 10.0,\n    \"operating_hours\": \"8:00-18:00\",\n    \"contact\": \"+33 9 81 29 83 14\",\n    \"address\": \"19 Rue Lucien Sampaix, 75010 Paris\",\n    \"rating\": 4.6,\n    \"review\": \"Cozy cafe with great coffee and delicious pastries.\"\n  },\n  {\n    \"name\": \"Septime\",\n    \"city\": \"Paris\",\n    \"cuisine\": \"French\",\n    \"dietary\": \"Vegetarian, Gluten-free\",\n    \"price_per_person\": 60.0,\n    \"operating_hours\": \"19:00-22:00\",\n    \"contact\": \"+33 1 43 67 38 29\",\n    \"address\": \"80 Rue de Charonne, 75011 Paris\",\n    \"rating\": 4.9,\n    \"review\": \"Michelin-starred restaurant with innovative and delicious cuisine.\"\n  }\n]\n```",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "tool",
+        "name": null,
+        "id": null,
+        "tool_call_id": "call_00_eDBfKbEKjZLZozJzJn1EUNYZ",
+        "artifact": null,
+        "status": "success"
+      }
+    },
+    {
+      "type": "ai",
+      "data": {
+        "content": "Now I need to filter for French cuisine restaurants that are open on Sunday. Let me check the operating hours more specifically for Sunday availability. First, let me identify which restaurants serve French cuisine:\n\nFrom the results, I can see three French cuisine restaurants:\n1. Le Comptoir du Relais (French)\n2. Le Grand Vefour (French)\n3. Septime (French)\n\nNow I need to check their operating hours to see which ones are open on Sunday. Let me check their opening hours more closely. While the data shows operating hours, I should verify specifically for Sunday by checking their opening hours details.",
+        "additional_kwargs": {
+          "tool_calls": [
+            {
+              "id": "call_00_rbR22Bem8JMSmJ4rjsIKqp2J",
+              "function": {
+                "arguments": "{\"restaurant_names\": [\"Le Comptoir du Relais\", \"Le Grand Vefour\", \"Septime\"]}",
+                "name": "check_restaurant_opening_hours"
+              },
+              "type": "function"
+            }
+          ],
+          "refusal": null
+        },
+        "response_metadata": {
+          "token_usage": {
+            "completion_tokens": 195,
+            "prompt_tokens": 4958,
+            "total_tokens": 5153,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 4256,
+              "cache_write_tokens": null
+            },
+            "estimated_cost": 0.0008118499999999999
+          },
+          "model_name": "deepseek-ai/DeepSeek-V3.2",
+          "system_fingerprint": null,
+          "id": "chatcmpl-RnzselXG9B2iLXMy34H87ici",
+          "service_tier": null,
+          "finish_reason": "tool_calls",
+          "logprobs": null
+        },
+        "type": "ai",
+        "name": null,
+        "id": "run--20956893-0f3c-4765-add1-451aa9e3bf1b-0",
+        "example": false,
+        "tool_calls": [
+          {
+            "name": "check_restaurant_opening_hours",
+            "args": {
+              "restaurant_names": [
+                "Le Comptoir du Relais",
+                "Le Grand Vefour",
+                "Septime"
+              ]
+            },
+            "id": "call_00_rbR22Bem8JMSmJ4rjsIKqp2J",
+            "type": "tool_call"
+          }
+        ],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 4958,
+          "output_tokens": 195,
+          "total_tokens": 5153,
+          "input_token_details": {
+            "cache_read": 4256
+          },
+          "output_token_details": {}
+        }
+      }
+    },
+    {
+      "type": "tool",
+      "data": {
+        "content": "```json\n[\n  {\n    \"name\": \"Le Comptoir du Relais\",\n    \"city\": \"Paris\",\n    \"cuisine\": \"French\",\n    \"dietary_labels\": [\"Gluten-free\", \"Vegetarian\"],\n    \"price_per_person\": 35.0,\n    \"operating_hours\": \"12:00-14:30, 19:00-22:30\",\n    \"contact\": \"+33 1 46 33 00 05\",\n    \"address\": \"9 Carrefour de l'Od\u00e9on, 75006 Paris\",\n    \"rating\": 4.2,\n    \"reviews\": [\n      \"Charming bistro with excellent service\",\n      \"Food was delicious, but a bit pricey\"\n    ]\n  },\n  {\n    \"name\": \"Le Grand Vefour\",\n    \"city\": \"Paris\",\n    \"cuisine\": \"French\",\n    \"dietary_labels\": [\"Vegan\", \"Gluten-free\"],\n    \"price_per_person\": 40.0,\n    \"operating_hours\": \"12:00-14:30, 19:00-22:00\",\n    \"contact\": \"+33 1 42 60 40 20\",\n    \"address\": \"14 Rue du Beaujolais, 75001 Paris\",\n    \"rating\": 4.5,\n    \"reviews\": [\n      \"Historic restaurant with stunning interior\",\n      \"Food was exquisite, but service was slow\"\n    ]\n  },\n  {\n    \"name\": \"Septime\",\n    \"city\": \"Paris\",\n    \"cuisine\": \"French\",\n    \"dietary_labels\": [\"Vegetarian\", \"Gluten-free\"],\n    \"price_per_person\": 60.0,\n    \"operating_hours\": \"19:00-22:00\",\n    \"contact\": \"+33 1 43 67 38 29\",\n    \"address\": \"80 Rue de Charonne, 75011 Paris\",\n    \"rating\": 4.8,\n    \"reviews\": [\n      \"Unique and memorable dining experience\",\n      \"Food was incredible, but very expensive\"\n    ]\n  }\n]\n```",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "tool",
+        "name": null,
+        "id": null,
+        "tool_call_id": "call_00_rbR22Bem8JMSmJ4rjsIKqp2J",
+        "artifact": null,
+        "status": "success"
+      }
+    },
+    {
+      "type": "ai",
+      "data": {
+        "content": "Based on the operating hours provided, I can see that all three French restaurants have operating hours listed, but I need to determine if they're open specifically on Sundays. The data shows general operating hours but doesn't specify days of the week. Let me check the best-rated French restaurant and get more detailed information.\n\nLooking at the ratings:\n- Septime: 4.8 rating (highest)\n- Le Grand Vefour: 4.5 rating\n- Le Comptoir du Relais: 4.2 rating\n\nSeptime has the best rating (4.8). Let me get additional information about Septime including its address and operating hours.",
+        "additional_kwargs": {
+          "tool_calls": [
+            {
+              "id": "call_00_kJ9Vvw08LxPYmziqA7MH4q4k",
+              "function": {
+                "arguments": "{\"restaurant_names\": [\"Septime\"]}",
+                "name": "get_rating_reviews_for_restaurants"
+              },
+              "type": "function"
+            }
+          ],
+          "refusal": null
+        },
+        "response_metadata": {
+          "token_usage": {
+            "completion_tokens": 189,
+            "prompt_tokens": 5630,
+            "total_tokens": 5819,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 5152,
+              "cache_write_tokens": null
+            },
+            "estimated_cost": 0.0008677499999999999
+          },
+          "model_name": "deepseek-ai/DeepSeek-V3.2",
+          "system_fingerprint": null,
+          "id": "chatcmpl-R7mXxS4H7YF02Rc6pMxrqwUJ",
+          "service_tier": null,
+          "finish_reason": "tool_calls",
+          "logprobs": null
+        },
+        "type": "ai",
+        "name": null,
+        "id": "run--ac05cbe7-499d-40cf-a7e5-b76697692b38-0",
+        "example": false,
+        "tool_calls": [
+          {
+            "name": "get_rating_reviews_for_restaurants",
+            "args": {
+              "restaurant_names": [
+                "Septime"
+              ]
+            },
+            "id": "call_00_kJ9Vvw08LxPYmziqA7MH4q4k",
+            "type": "tool_call"
+          }
+        ],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 5630,
+          "output_tokens": 189,
+          "total_tokens": 5819,
+          "input_token_details": {
+            "cache_read": 5152
+          },
+          "output_token_details": {}
+        }
+      }
+    },
+    {
+      "type": "tool",
+      "data": {
+        "content": "```json\n{\n  \"restaurants\": [\n    {\n      \"name\": \"Septime\",\n      \"city\": \"Paris\",\n      \"cuisine\": \"French\",\n      \"dietary\": \"Gluten-free, Vegetarian\",\n      \"price_per_person\": 120.0,\n      \"operating_hours\": \"19:00-23:00\",\n      \"address\": \"80 Rue de Charonne, 75011 Paris, France\",\n      \"phone\": \"+33 1 43 67 38 29\",\n      \"rating\": 4.8,\n      \"reviews\": [\n        {\n          \"rating\": 5,\n          \"review\": \"A culinary journey with impeccable service.\"\n        },\n        {\n          \"rating\": 4,\n          \"review\": \"Creative dishes, but a bit pricey.\"\n        }\n      ]\n    }\n  ]\n}\n```",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "tool",
+        "name": null,
+        "id": null,
+        "tool_call_id": "call_00_kJ9Vvw08LxPYmziqA7MH4q4k",
+        "artifact": null,
+        "status": "success"
+      }
+    },
+    {
+      "type": "ai",
+      "data": {
+        "content": "Now I have conflicting information about the operating hours. The first result showed \"19:00-22:00\" and this latest result shows \"19:00-23:00\". More importantly, I need to determine if Septime is open on Sundays. Let me get the specific opening hours and also check if there's any day-of-week information.",
+        "additional_kwargs": {
+          "tool_calls": [
+            {
+              "id": "call_00_5bNl8dU7aJ43A0hODKaDLxIr",
+              "function": {
+                "arguments": "{\"restaurant_names\": [\"Septime\"]}",
+                "name": "get_restaurants_address"
+              },
+              "type": "function"
+            }
+          ],
+          "refusal": null
+        },
+        "response_metadata": {
+          "token_usage": {
+            "completion_tokens": 122,
+            "prompt_tokens": 6018,
+            "total_tokens": 6140,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 5792,
+              "cache_write_tokens": null
+            },
+            "estimated_cost": 0.0008593
+          },
+          "model_name": "deepseek-ai/DeepSeek-V3.2",
+          "system_fingerprint": null,
+          "id": "chatcmpl-R9nREYBSQIe3LPW58FrzhTrH",
+          "service_tier": null,
+          "finish_reason": "tool_calls",
+          "logprobs": null
+        },
+        "type": "ai",
+        "name": null,
+        "id": "run--b5856415-281b-4018-bb01-2faf2878f30d-0",
+        "example": false,
+        "tool_calls": [
+          {
+            "name": "get_restaurants_address",
+            "args": {
+              "restaurant_names": [
+                "Septime"
+              ]
+            },
+            "id": "call_00_5bNl8dU7aJ43A0hODKaDLxIr",
+            "type": "tool_call"
+          }
+        ],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 6018,
+          "output_tokens": 122,
+          "total_tokens": 6140,
+          "input_token_details": {
+            "cache_read": 5792
+          },
+          "output_token_details": {}
+        }
+      }
+    },
+    {
+      "type": "tool",
+      "data": {
+        "content": "```\n[\n  {\n    \"name\": \"Septime\",\n    \"address\": \"80 Rue de Charonne, 75011 Paris, France\",\n    \"cuisine\": \"French\",\n    \"dietary_support\": [\"Vegetarian\", \"Gluten-free\"],\n    \"price_per_person\": 120,\n    \"operating_hours\": \"19:30-22:30\",\n    \"contact\": \"+33 1 43 67 38 29\",\n    \"rating\": 4.8,\n    \"reviews\": [\n      {\n        \"author\": \"Emilie R.\",\n        \"rating\": 5,\n        \"text\": \"Sublime experience, exceptional service!\"\n      },\n      {\n        \"author\": \"Pierre L.\",\n        \"rating\": 4,\n        \"text\": \"Creative, delicious dishes. A bit pricey.\"\n      }\n    ]\n  }\n]\n```",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "tool",
+        "name": null,
+        "id": null,
+        "tool_call_id": "call_00_5bNl8dU7aJ43A0hODKaDLxIr",
+        "artifact": null,
+        "status": "success"
+      }
+    },
+    {
+      "type": "ai",
+      "data": {
+        "content": "I'm getting conflicting operating hours information from different sources. The most recent information shows \"19:30-22:30\" but still doesn't specify days of the week. Unfortunately, the tools I have access to don't provide day-specific operating hours (Monday, Tuesday, etc.).\n\nHowever, based on the information available, **Septime** is the highest-rated French restaurant in Paris with a 4.8 rating. Here's what I can tell you:\n\n**Recommended Restaurant: Septime**\n- **Restaurant Name:** Septime\n- **Rating:** 4.8/5 (highest among French restaurants in Paris)\n- **Address:** 80 Rue de Charonne, 75011 Paris, France\n- **Operating Hours:** According to the most recent data - 19:30-22:30\n- **Cuisine:** French\n- **Price per person:** \u20ac120\n- **Dietary Support:** Vegetarian, Gluten-free\n- **Contact:** +33 1 43 67 38 29\n\n**Important Note:** While I've provided the operating hours, I cannot confirm with 100% certainty that Septime is open on Sundays, as the tools don't provide day-specific opening information. Many high-end restaurants in Paris may have limited hours on Sundays or be closed altogether.\n\n**Recommendation:** I suggest contacting Septime directly at +33 1 43 67 38 29 to confirm their Sunday hours and make a reservation if they're open. Given its 4.8 rating and Michelin-starred status (mentioned in the reviews), it would be an excellent dining choice if available on Sunday.",
+        "additional_kwargs": {
+          "refusal": null
+        },
+        "response_metadata": {
+          "token_usage": {
+            "completion_tokens": 339,
+            "prompt_tokens": 6343,
+            "total_tokens": 6682,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 6112,
+              "cache_write_tokens": null
+            },
+            "estimated_cost": 0.00098683
+          },
+          "model_name": "deepseek-ai/DeepSeek-V3.2",
+          "system_fingerprint": null,
+          "id": "chatcmpl-RG1hauv9TkYm5KXmcOJMl3eJ",
+          "service_tier": null,
+          "finish_reason": "stop",
+          "logprobs": null
+        },
+        "type": "ai",
+        "name": null,
+        "id": "run--b1556009-9803-4249-a79a-741bce37cfb2-0",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 6343,
+          "output_tokens": 339,
+          "total_tokens": 6682,
+          "input_token_details": {
+            "cache_read": 6112
+          },
+          "output_token_details": {}
+        }
+      }
+    }
+  ],
+  "retry_count": 0
+}

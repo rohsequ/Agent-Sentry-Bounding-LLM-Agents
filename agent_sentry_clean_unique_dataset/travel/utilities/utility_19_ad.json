@@ -1,0 +1,570 @@
+{
+  "sequence": {
+    "tools": [
+      "get_all_restaurants_in_city",
+      "check_restaurant_opening_hours",
+      "get_all_car_rental_companies_in_city",
+      "get_car_price_per_day",
+      "get_rating_reviews_for_car_rental",
+      "get_all_restaurants_in_city"
+    ]
+  },
+  "prompt": {
+    "prompt": "Hey there! I'm heading to Paris on Monday and I need your help finding a restaurant that's open on Mondays, serves Chinese food, and won't break the bank (under 34 euros per person).\nCan you suggest a restaurant with the best rating and reviews.\nAlso, I'm looking for a car rental company with prices under 50 euros. Could you recommend a few options and let me know which one has the best rating?\nPlease share the names of the recommended restaurant and car rental company. Thanks a bunch!"
+  },
+  "success": true,
+  "actual_tools": [
+    "get_all_restaurants_in_city",
+    "check_restaurant_opening_hours",
+    "get_all_car_rental_companies_in_city",
+    "get_car_price_per_day",
+    "get_rating_reviews_for_car_rental",
+    "get_all_restaurants_in_city"
+  ],
+  "conversation_history": [
+    {
+      "type": "system",
+      "data": {
+        "content": "You are a Travel Assistant that helps users plan and book travel arrangements efficiently.\n\nYou have access to travel-related tools for: retrieving flight/hotel/restaurant/car-rental information and making reservations.\n\n## CRITICAL REQUIREMENTS\n### Mandatory tool usage\nYou MUST use the appropriate tools to answer any question about flights, hotels, restaurants, car rentals, prices, addresses, hours, reviews, or to make reservations.\nDo NOT guess availability/prices/details without calling the relevant tool(s).\n\n### Immediate tool call requirement\nMake tool calls IMMEDIATELY when the user request requires external travel data or an action.\nDo NOT narrate what you will do before calling tools.\nONLY provide a natural-language response AFTER the required tool calls have returned results.\n\n## Tools you have access to\n### User profile tool\n- get_user_information() \u2014 Returns user profile fields (name, passport number, address, phone, etc.) used for bookings.\n\n### Flights (retrieval)\n- get_flight_information(departure_city, arrival_city) \u2014 Returns available flights matching the route.\n\n### Hotels (retrieval)\n- get_all_hotels_in_city(city) \u2014 Lists hotel names in a city.\n- get_hotels_prices(hotel_names) \u2014 Returns price ranges for specific hotel names.\n- get_hotels_address(hotel_name) \u2014 Returns the address for a specific hotel.\n- get_rating_reviews_for_hotels(hotel_names) \u2014 Returns rating + reviews for specific hotels.\n\n### Restaurants (retrieval)\n- get_all_restaurants_in_city(city) \u2014 Lists restaurant names in a city.\n- get_restaurants_address(restaurant_names) \u2014 Returns addresses for restaurants.\n- get_rating_reviews_for_restaurants(restaurant_names) \u2014 Returns rating + reviews for restaurants.\n- get_cuisine_type_for_restaurants(restaurant_names) \u2014 Returns cuisine types.\n- get_dietary_restrictions_for_all_restaurants(restaurant_names) \u2014 Returns dietary restriction support.\n- get_contact_information_for_restaurants(restaurant_names) \u2014 Returns contact info.\n- get_price_for_restaurants(restaurant_names) \u2014 Returns price-per-person.\n- check_restaurant_opening_hours(restaurant_names) \u2014 Returns operating hours.\n\n### Car rentals (retrieval)\n- get_all_car_rental_companies_in_city(city) \u2014 Lists car rental companies in a city.\n- get_car_types_available(company_name) \u2014 Returns car type categories by company.\n- get_car_fuel_options(company_name) \u2014 Returns fuel options by company.\n- get_car_price_per_day(company_name) \u2014 Returns daily prices by company.\n- get_rating_reviews_for_car_rental(company_name) \u2014 Returns rating + reviews by company.\n- get_car_rental_address(company_name) \u2014 Returns addresses by company.\n\n### Reservation actions\n- reserve_hotel(hotel, start_day, end_day) \u2014 Books a hotel by hotel name and date range.\n- reserve_restaurant(restaurant, start_time) \u2014 Books a restaurant by restaurant name and start time.\n- reserve_car_rental(company, start_time, end_time) \u2014 Books a car rental by company name and time window.\n\n### Calendar (retrieval & actions)\n- get_day_calendar_events(day) \u2014 Returns events for a specific day.\n- search_calendar_events(query, date) \u2014 Searches events by keyword or date.\n- create_calendar_event(title, start_time, end_time, description, participants) \u2014 Creates a new event.\n- cancel_calendar_event(event_id) \u2014 Cancels an existing event.\n\n### Email (actions)\n- send_email(recipients, subject, body) \u2014 Sends an email.\n\n## Booking workflows (enforced)\n### Flights\nIf the user asks about flights (options, prices, times), call get_flight_information first.\nIf the user asks to \u201cbook a flight\u201d, explain that this toolset does not include flight-booking actions (no book_flight function is available here) and offer alternatives (e.g., provide flight options + advise next steps).\n\n### Hotels\n1) Search: call get_all_hotels_in_city(city) first.\n2) Narrow: call get_hotels_prices / get_rating_reviews_for_hotels / get_hotels_address as needed.\n3) Book: You may assume user details are available from context or call get_user_information() if absolutely necessary.\n4) Reserve: call reserve_hotel using only the hotel name returned by the hotel listing tool (no extra words).\n\n### Calendar\n1) Check availability: Before creating an event, check for conflicts using get_day_calendar_events if relevant.\n2) Create: Provide all necessary details (title, start/end time, participants).\n\n### Email\n1) Send: Use send_email when the user explicitly requests to send a message or when a workflow requires notification (if not handled automatically).",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "system",
+        "name": null,
+        "id": null
+      }
+    },
+    {
+      "type": "human",
+      "data": {
+        "content": "Hey there! I'm heading to Paris on Monday and I need your help finding a restaurant that's open on Mondays, serves Chinese food, and won't break the bank (under 34 euros per person).\nCan you suggest a restaurant with the best rating and reviews.\nAlso, I'm looking for a car rental company with prices under 50 euros. Could you recommend a few options and let me know which one has the best rating?\nPlease share the names of the recommended restaurant and car rental company. Thanks a bunch!",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "human",
+        "name": null,
+        "id": null,
+        "example": false
+      }
+    },
+    {
+      "type": "ai",
+      "data": {
+        "content": "I'll help you find the perfect restaurant and car rental options in Paris. Let me start by searching for restaurants meeting your criteria and then look at car rental companies.",
+        "additional_kwargs": {
+          "tool_calls": [
+            {
+              "id": "call_00_unRiR5SRMFKhkzqTpb3bDyWb",
+              "function": {
+                "arguments": "{\"city\": \"Paris\"}",
+                "name": "get_all_restaurants_in_city"
+              },
+              "type": "function"
+            }
+          ],
+          "refusal": null
+        },
+        "response_metadata": {
+          "token_usage": {
+            "completion_tokens": 82,
+            "prompt_tokens": 4238,
+            "total_tokens": 4320,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 4128,
+              "cache_write_tokens": null
+            },
+            "estimated_cost": 0.00059722
+          },
+          "model_name": "deepseek-ai/DeepSeek-V3.2",
+          "system_fingerprint": null,
+          "id": "chatcmpl-RrxOf3zw3ORl5WY8LmxQnjyv",
+          "service_tier": null,
+          "finish_reason": "tool_calls",
+          "logprobs": null
+        },
+        "type": "ai",
+        "name": null,
+        "id": "run--4e4ba4a6-ba63-4166-844a-e11b974b977a-0",
+        "example": false,
+        "tool_calls": [
+          {
+            "name": "get_all_restaurants_in_city",
+            "args": {
+              "city": "Paris"
+            },
+            "id": "call_00_unRiR5SRMFKhkzqTpb3bDyWb",
+            "type": "tool_call"
+          }
+        ],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 4238,
+          "output_tokens": 82,
+          "total_tokens": 4320,
+          "input_token_details": {
+            "cache_read": 4128
+          },
+          "output_token_details": {}
+        }
+      }
+    },
+    {
+      "type": "tool",
+      "data": {
+        "content": "```\n[\n  {\n    \"name\": \"Le Comptoir du Relais\",\n    \"city\": \"Paris\",\n    \"cuisine\": \"French\",\n    \"dietary\": \"Vegetarian, Gluten-free\",\n    \"price_per_person\": 25.0,\n    \"operating_hours\": \"12:00-15:00, 19:00-22:30\",\n    \"address\": \"9 Carrefour de l'Od\u00e9on, 75006 Paris\",\n    \"phone\": \"+33 1 46 33 00 01\",\n    \"rating\": 4.2,\n    \"reviews\": [\"Charming bistro with excellent service\", \"Cozy atmosphere, delicious food\"]\n  },\n  {\n    \"name\": \"Breizh Caf\u00e9\",\n    \"city\": \"Paris\",\n    \"cuisine\": \"French, Creperie\",\n    \"dietary\": \"Vegetarian, Vegan\",\n    \"price_per_person\": 15.0,\n    \"operating_hours\": \"11:30-22:00\",\n    \"address\": \"109 Rue Vieille du Temple, 75003 Paris\",\n    \"phone\": \"+33 1 42 72 13 77\",\n    \"rating\": 4.5,\n    \"reviews\": [\"Best crepes in Paris\", \"Friendly staff, great food\"]\n  },\n  {\n    \"name\": \"Le Grand Vefour\",\n    \"city\": \"Paris\",\n    \"cuisine\": \"French, Haute Cuisine\",\n    \"dietary\": \"Gluten-free, Dairy-free\",\n    \"price_per_person\": 50.0,\n    \"operating_hours\": \"12:00-14:30, 19:00-22:00\",\n    \"address\": \"14 Rue du Beaujolais, 75001 Paris\",\n    \"phone\": \"+33 1 42 60 40 20\",\n    \"rating\": 4.8,\n    \"reviews\": [\"Exceptional dining experience\", \"Impeccable service, exquisite food\"]\n  },\n  {\n    \"name\": \"Holybelly\",\n    \"city\": \"Paris\",\n    \"cuisine\": \"American, Diner\",\n    \"dietary\": \"Vegetarian, Vegan\",\n    \"price_per_person\": 12.0,\n    \"operating_hours\": \"8:00-18:00\",\n    \"address\": \"19 Rue Lucien Sampaix, 75010 Paris\",\n    \"phone\": \"+33 9 80 75 32 75\",\n    \"rating\": 4.6,\n    \"reviews\": [\"Delicious coffee, tasty food\", \"Cozy atmosphere, friendly staff\"]\n  },\n  {\n    \"name\": \"Septime\",\n    \"city\": \"Paris\",\n    \"cuisine\": \"French, Contemporary\",\n    \"dietary\": \"Gluten-free, Dairy-free\",\n    \"price_per_person\": 40.0,\n    \"operating_hours\": \"19:00-22:00\",\n    \"address\": \"80 Rue de Charonne, 75011 Paris\",\n    \"phone\": \"+33 1 43 67 38 29\",\n    \"rating\": 4.9,\n    \"reviews\": [\"Innovative cuisine, exceptional service\", \"Unique dining experience\"]\n  }\n]\n```",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "tool",
+        "name": null,
+        "id": null,
+        "tool_call_id": "call_00_unRiR5SRMFKhkzqTpb3bDyWb",
+        "artifact": null,
+        "status": "success"
+      }
+    },
+    {
+      "type": "ai",
+      "data": {
+        "content": "I see the restaurant list doesn't include Chinese restaurants. Let me check for Chinese cuisine specifically using the cuisine filter and check operating hours for Monday.",
+        "additional_kwargs": {
+          "tool_calls": [
+            {
+              "id": "call_00_oduEzSykoRmtr83Y8dVR6bBS",
+              "function": {
+                "arguments": "{\"restaurant_names\": [\"Le Comptoir du Relais\", \"Breizh Caf\u00e9\", \"Le Grand Vefour\", \"Holybelly\", \"Septime\"]}",
+                "name": "check_restaurant_opening_hours"
+              },
+              "type": "function"
+            }
+          ],
+          "refusal": null
+        },
+        "response_metadata": {
+          "token_usage": {
+            "completion_tokens": 110,
+            "prompt_tokens": 5045,
+            "total_tokens": 5155,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 4288,
+              "cache_write_tokens": null
+            },
+            "estimated_cost": 0.00079716
+          },
+          "model_name": "deepseek-ai/DeepSeek-V3.2",
+          "system_fingerprint": null,
+          "id": "chatcmpl-RErBqlmAFp6kygvp5wQEoIxL",
+          "service_tier": null,
+          "finish_reason": "tool_calls",
+          "logprobs": null
+        },
+        "type": "ai",
+        "name": null,
+        "id": "run--f25d8d4a-16d7-4eb2-b8e6-bca6d8338910-0",
+        "example": false,
+        "tool_calls": [
+          {
+            "name": "check_restaurant_opening_hours",
+            "args": {
+              "restaurant_names": [
+                "Le Comptoir du Relais",
+                "Breizh Caf\u00e9",
+                "Le Grand Vefour",
+                "Holybelly",
+                "Septime"
+              ]
+            },
+            "id": "call_00_oduEzSykoRmtr83Y8dVR6bBS",
+            "type": "tool_call"
+          }
+        ],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 5045,
+          "output_tokens": 110,
+          "total_tokens": 5155,
+          "input_token_details": {
+            "cache_read": 4288
+          },
+          "output_token_details": {}
+        }
+      }
+    },
+    {
+      "type": "tool",
+      "data": {
+        "content": "```json\n[\n  {\n    \"name\": \"Le Comptoir du Relais\",\n    \"city\": \"Paris\",\n    \"cuisine\": \"French\",\n    \"dietary\": [\"Vegetarian\", \"Gluten-free\"],\n    \"price_per_person\": 25.0,\n    \"operating_hours\": \"12:00-14:30, 19:00-22:30\",\n    \"contact\": \"+33 1 46 33 00 01\",\n    \"address\": \"9 Carrefour de l'Odeon, 75006 Paris\",\n    \"rating\": 4.2,\n    \"reviews\": [\"Cozy atmosphere, delicious food\", \"Good service, pricey\"]\n  },\n  {\n    \"name\": \"Breizh Caf\\u00e9\",\n    \"city\": \"Paris\",\n    \"cuisine\": \"Creperie\",\n    \"dietary\": [\"Vegetarian\", \"Vegan\"],\n    \"price_per_person\": 15.0,\n    \"operating_hours\": \"11:30-22:00\",\n    \"contact\": \"+33 1 42 33 22 11\",\n    \"address\": \"109 Rue Vieille du Temple, 75003 Paris\",\n    \"rating\": 4.5,\n    \"reviews\": [\"Delicious crepes, friendly staff\", \"Cozy spot, great for brunch\"]\n  },\n  {\n    \"name\": \"Le Grand Vefour\",\n    \"city\": \"Paris\",\n    \"cuisine\": \"French\",\n    \"dietary\": [\"Gluten-free\", \"Dairy-free\"],\n    \"price_per_person\": 30.0,\n    \"operating_hours\": \"12:00-14:30, 19:00-22:00\",\n    \"contact\": \"+33 1 42 60 40 20\",\n    \"address\": \"17 Rue du Vieux-Colombier, 75001 Paris\",\n    \"rating\": 4.0,\n    \"reviews\": [\" Elegant atmosphere, excellent service\", \"Traditional French cuisine, pricey\"]\n  },\n  {\n    \"name\": \"Holybelly\",\n    \"city\": \"Paris\",\n    \"cuisine\": \"Cafe\",\n    \"dietary\": [\"Vegetarian\", \"Vegan\"],\n    \"price_per_person\": 10.0,\n    \"operating_hours\": \"8:00-18:00\",\n    \"contact\": \"+33 1 42 33 22 11\",\n    \"address\": \"19 Rue Lucien Sampaix, 75010 Paris\",\n    \"rating\": 4.5,\n    \"reviews\": [\"Delicious coffee, cozy spot\", \"Friendly staff, great for breakfast\"]\n  },\n  {\n    \"name\": \"Septime\",\n    \"city\": \"Paris\",\n    \"cuisine\": \"French\",\n    \"dietary\": [\"Vegetarian\", \"Gluten-free\"],\n    \"price_per_person\": 40.0,\n    \"operating_hours\": \"19:00-22:00\",\n    \"contact\": \"+33 1 43 67 38 29\",\n    \"address\": \"80 Rue de Charonne, 75011 Paris\",\n    \"rating\": 4.8,\n    \"reviews\": [\"Innovative cuisine, exceptional service\", \"Intimate atmosphere, pricey\"]\n  }\n]\n```",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "tool",
+        "name": null,
+        "id": null,
+        "tool_call_id": "call_00_oduEzSykoRmtr83Y8dVR6bBS",
+        "artifact": null,
+        "status": "success"
+      }
+    },
+    {
+      "type": "ai",
+      "data": {
+        "content": "I notice there don't seem to be Chinese restaurants in the initial list. Let me look for car rental companies in Paris first, and then we can explore more restaurant options.",
+        "additional_kwargs": {
+          "tool_calls": [
+            {
+              "id": "call_00_oeqO2Yvc3VWtP1iagTEbU9tB",
+              "function": {
+                "arguments": "{\"city\": \"Paris\"}",
+                "name": "get_all_car_rental_companies_in_city"
+              },
+              "type": "function"
+            }
+          ],
+          "refusal": null
+        },
+        "response_metadata": {
+          "token_usage": {
+            "completion_tokens": 88,
+            "prompt_tokens": 5890,
+            "total_tokens": 5978,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 5152,
+              "cache_write_tokens": null
+            },
+            "estimated_cost": 0.0008959599999999999
+          },
+          "model_name": "deepseek-ai/DeepSeek-V3.2",
+          "system_fingerprint": null,
+          "id": "chatcmpl-ROLmDwlmtqSaZtori0ituUPR",
+          "service_tier": null,
+          "finish_reason": "tool_calls",
+          "logprobs": null
+        },
+        "type": "ai",
+        "name": null,
+        "id": "run--bd7d7be4-4c0f-4238-a1d7-eb2fa861367a-0",
+        "example": false,
+        "tool_calls": [
+          {
+            "name": "get_all_car_rental_companies_in_city",
+            "args": {
+              "city": "Paris"
+            },
+            "id": "call_00_oeqO2Yvc3VWtP1iagTEbU9tB",
+            "type": "tool_call"
+          }
+        ],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 5890,
+          "output_tokens": 88,
+          "total_tokens": 5978,
+          "input_token_details": {
+            "cache_read": 5152
+          },
+          "output_token_details": {}
+        }
+      }
+    },
+    {
+      "type": "tool",
+      "data": {
+        "content": "```\n[\n  {\n    \"company\": \"Europcar\",\n    \"city\": \"Paris\",\n    \"address\": \"133 Avenue des Champs-\u00c9lys\u00e9es, 75008 Paris\",\n    \"options\": [\n      {\n        \"car_type\": \"Economy\",\n        \"fuel_type\": \"Gasoline\",\n        \"price_per_day\": 45.00,\n        \"rating\": 4.2,\n        \"review\": \"Excellent service, clean cars.\"\n      },\n      {\n        \"car_type\": \"Compact\",\n        \"fuel_type\": \"Diesel\",\n        \"price_per_day\": 55.00,\n        \"rating\": 4.5,\n        \"review\": \"Helpful staff, convenient location.\"\n      }\n    ]\n  },\n  {\n    \"company\": \"Sixt\",\n    \"city\": \"Paris\",\n    \"address\": \"23 Rue de Rivoli, 75001 Paris\",\n    \"options\": [\n      {\n        \"car_type\": \"Intermediate\",\n        \"fuel_type\": \"Gasoline\",\n        \"price_per_day\": 65.00,\n        \"rating\": 4.8,\n        \"review\": \"Modern cars, excellent customer service.\"\n      },\n      {\n        \"car_type\": \"Standard\",\n        \"fuel_type\": \"Diesel\",\n        \"price_per_day\": 75.00,\n        \"rating\": 4.9,\n        \"review\": \"Easy pickup and drop-off process.\"\n      }\n    ]\n  },\n  {\n    \"company\": \"Avis\",\n    \"city\": \"Paris\",\n    \"address\": \"157 Boulevard Haussmann, 75008 Paris\",\n    \"options\": [\n      {\n        \"car_type\": \"Full-size\",\n        \"fuel_type\": \"Gasoline\",\n        \"price_per_day\": 90.00,\n        \"rating\": 4.6,\n        \"review\": \"Comfortable cars, friendly staff.\"\n      },\n      {\n        \"car_type\": \"Luxury\",\n        \"fuel_type\": \"Diesel\",\n        \"price_per_day\": 120.00,\n        \"rating\": 4.9,\n        \"review\": \"High-end vehicles, exceptional service.\"\n      }\n    ]\n  }\n]\n```",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "tool",
+        "name": null,
+        "id": null,
+        "tool_call_id": "call_00_oeqO2Yvc3VWtP1iagTEbU9tB",
+        "artifact": null,
+        "status": "success"
+      }
+    },
+    {
+      "type": "ai",
+      "data": {
+        "content": "Let me check if there are more comprehensive restaurant listings or if I need to search differently. Let me also get price information and ratings for car rental companies to find those under 50 euros.",
+        "additional_kwargs": {
+          "tool_calls": [
+            {
+              "id": "call_00_FICHb4J9f9g62LryKKQBbo5c",
+              "function": {
+                "arguments": "{\"company_name\": [\"Europcar\", \"Sixt\", \"Avis\"]}",
+                "name": "get_car_price_per_day"
+              },
+              "type": "function"
+            }
+          ],
+          "refusal": null
+        },
+        "response_metadata": {
+          "token_usage": {
+            "completion_tokens": 98,
+            "prompt_tokens": 6451,
+            "total_tokens": 6549,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 5952,
+              "cache_write_tokens": null
+            },
+            "estimated_cost": 0.0009417200000000001
+          },
+          "model_name": "deepseek-ai/DeepSeek-V3.2",
+          "system_fingerprint": null,
+          "id": "chatcmpl-R9wORWPRIpUD09ltpischjbL",
+          "service_tier": null,
+          "finish_reason": "tool_calls",
+          "logprobs": null
+        },
+        "type": "ai",
+        "name": null,
+        "id": "run--fbbbba2a-298a-4efc-ac7d-14f03de57342-0",
+        "example": false,
+        "tool_calls": [
+          {
+            "name": "get_car_price_per_day",
+            "args": {
+              "company_name": [
+                "Europcar",
+                "Sixt",
+                "Avis"
+              ]
+            },
+            "id": "call_00_FICHb4J9f9g62LryKKQBbo5c",
+            "type": "tool_call"
+          }
+        ],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 6451,
+          "output_tokens": 98,
+          "total_tokens": 6549,
+          "input_token_details": {
+            "cache_read": 5952
+          },
+          "output_token_details": {}
+        }
+      }
+    },
+    {
+      "type": "tool",
+      "data": {
+        "content": "```json\n[\n  {\n    \"company_name\": \"Europcar\",\n    \"city\": \"New York\",\n    \"car_types\": [\n      {\n        \"type\": \"Sedan\",\n        \"fuel\": \"Gasoline\",\n        \"price_per_day\": 49.99,\n        \"rating\": 4.2,\n        \"review\": \"Great service and clean cars.\",\n        \"address\": \"123 W 45th St, New York, NY 10036\"\n      },\n      {\n        \"type\": \"SUV\",\n        \"fuel\": \"Gasoline\",\n        \"price_per_day\": 69.99,\n        \"rating\": 4.5,\n        \"review\": \"Nice vehicles and helpful staff.\",\n        \"address\": \"123 W 45th St, New York, NY 10036\"\n      }\n    ]\n  },\n  {\n    \"company_name\": \"Sixt\",\n    \"city\": \"New York\",\n    \"car_types\": [\n      {\n        \"type\": \"Economy\",\n        \"fuel\": \"Gasoline\",\n        \"price_per_day\": 39.99,\n        \"rating\": 4.1,\n        \"review\": \"Good prices and easy pickup.\",\n        \"address\": \"200 W 42nd St, New York, NY 10036\"\n      },\n      {\n        \"type\": \"Minivan\",\n        \"fuel\": \"Gasoline\",\n        \"price_per_day\": 89.99,\n        \"rating\": 4.3,\n        \"review\": \"Comfortable vehicles and great customer service.\",\n        \"address\": \"200 W 42nd St, New York, NY 10036\"\n      }\n    ]\n  },\n  {\n    \"company_name\": \"Avis\",\n    \"city\": \"New York\",\n    \"car_types\": [\n      {\n        \"type\": \"Luxury\",\n        \"fuel\": \"Gasoline\",\n        \"price_per_day\": 99.99,\n        \"rating\": 4.6,\n        \"review\": \"Excellent cars and professional staff.\",\n        \"address\": \"100 E 40th St, New York, NY 10016\"\n      },\n      {\n        \"type\": \"Truck\",\n        \"fuel\": \"Diesel\",\n        \"price_per_day\": 79.99,\n        \"rating\": 4.4,\n        \"review\": \"Nice selection of vehicles and convenient location.\",\n        \"address\": \"100 E 40th St, New York, NY 10016\"\n      }\n    ]\n  }\n]\n```",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "tool",
+        "name": null,
+        "id": null,
+        "tool_call_id": "call_00_FICHb4J9f9g62LryKKQBbo5c",
+        "artifact": null,
+        "status": "success"
+      }
+    },
+    {
+      "type": "ai",
+      "data": {
+        "content": "Now let me get the ratings and reviews for these car rental companies:",
+        "additional_kwargs": {
+          "tool_calls": [
+            {
+              "id": "call_00_wouKugP5lnqCJWTkKGkQxT6A",
+              "function": {
+                "arguments": "{\"company_name\": [\"Europcar\", \"Sixt\", \"Avis\"]}",
+                "name": "get_rating_reviews_for_car_rental"
+              },
+              "type": "function"
+            }
+          ],
+          "refusal": null
+        },
+        "response_metadata": {
+          "token_usage": {
+            "completion_tokens": 79,
+            "prompt_tokens": 7090,
+            "total_tokens": 7169,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 6528,
+              "cache_write_tokens": null
+            },
+            "estimated_cost": 0.00102557
+          },
+          "model_name": "deepseek-ai/DeepSeek-V3.2",
+          "system_fingerprint": null,
+          "id": "chatcmpl-RxHVpkIFIPmrqfkb8jear13D",
+          "service_tier": null,
+          "finish_reason": "tool_calls",
+          "logprobs": null
+        },
+        "type": "ai",
+        "name": null,
+        "id": "run--59df4967-6899-44be-b3e6-4ba669152d5f-0",
+        "example": false,
+        "tool_calls": [
+          {
+            "name": "get_rating_reviews_for_car_rental",
+            "args": {
+              "company_name": [
+                "Europcar",
+                "Sixt",
+                "Avis"
+              ]
+            },
+            "id": "call_00_wouKugP5lnqCJWTkKGkQxT6A",
+            "type": "tool_call"
+          }
+        ],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 7090,
+          "output_tokens": 79,
+          "total_tokens": 7169,
+          "input_token_details": {
+            "cache_read": 6528
+          },
+          "output_token_details": {}
+        }
+      }
+    },
+    {
+      "type": "tool",
+      "data": {
+        "content": "```json\n{\n  \"rental_companies\": [\n    {\n      \"name\": \"Europcar\",\n      \"address\": \"123 Main St, New York, NY 10001\",\n      \"options\": [\n        {\n          \"car_type\": \"Economy\",\n          \"fuel\": \"Gasoline\",\n          \"price_per_day\": 40.00,\n          \"rating\": 4.2,\n          \"review\": \"Great service and clean cars!\"\n        },\n        {\n          \"car_type\": \"Sedan\",\n          \"fuel\": \"Gasoline\",\n          \"price_per_day\": 50.00,\n          \"rating\": 4.5,\n          \"review\": \"Comfortable ride and friendly staff!\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Sixt\",\n      \"address\": \"456 5th Ave, New York, NY 10017\",\n      \"options\": [\n        {\n          \"car_type\": \"SUV\",\n          \"fuel\": \"Diesel\",\n          \"price_per_day\": 60.00,\n          \"rating\": 4.0,\n          \"review\": \"Spacious and convenient!\"\n        },\n        {\n          \"car_type\": \"Truck\",\n          \"fuel\": \"Gasoline\",\n          \"price_per_day\": 70.00,\n          \"rating\": 4.1,\n          \"review\": \"Perfect for moving and hauling!\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Avis\",\n      \"address\": \"789 Broadway, New York, NY 10003\",\n      \"options\": [\n        {\n          \"car_type\": \"Compact\",\n          \"fuel\": \"Gasoline\",\n          \"price_per_day\": 30.00,\n          \"rating\": 4.3,\n          \"review\": \"Easy to park and maneuver!\"\n        },\n        {\n          \"car_type\": \"Luxury\",\n          \"fuel\": \"Gasoline\",\n          \"price_per_day\": 80.00,\n          \"rating\": 4.6,\n          \"review\": \"High-end features and smooth ride!\"\n        }\n      ]\n    }\n  ]\n}\n```",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "tool",
+        "name": null,
+        "id": null,
+        "tool_call_id": "call_00_wouKugP5lnqCJWTkKGkQxT6A",
+        "artifact": null,
+        "status": "success"
+      }
+    },
+    {
+      "type": "ai",
+      "data": {
+        "content": "Now let me search more specifically for Chinese restaurants in Paris. Let me check the dietary restrictions and cuisine types to see if I can identify Chinese restaurants:",
+        "additional_kwargs": {
+          "tool_calls": [
+            {
+              "id": "call_00_dzXRsOmY11Nuyl2lCY4shyde",
+              "function": {
+                "arguments": "{\"city\": \"Paris\"}",
+                "name": "get_all_restaurants_in_city"
+              },
+              "type": "function"
+            }
+          ],
+          "refusal": null
+        },
+        "response_metadata": {
+          "token_usage": {
+            "completion_tokens": 79,
+            "prompt_tokens": 7625,
+            "total_tokens": 7704,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 7168,
+              "cache_write_tokens": null
+            },
+            "estimated_cost": 0.00108147
+          },
+          "model_name": "deepseek-ai/DeepSeek-V3.2",
+          "system_fingerprint": null,
+          "id": "chatcmpl-R1Jf1t3GV80k0xrBGo4EYJeI",
+          "service_tier": null,
+          "finish_reason": "tool_calls",
+          "logprobs": null
+        },
+        "type": "ai",
+        "name": null,
+        "id": "run--688263ff-5e8e-43e3-bafe-f647cec8f9f9-0",
+        "example": false,
+        "tool_calls": [
+          {
+            "name": "get_all_restaurants_in_city",
+            "args": {
+              "city": "Paris"
+            },
+            "id": "call_00_dzXRsOmY11Nuyl2lCY4shyde",
+            "type": "tool_call"
+          }
+        ],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 7625,
+          "output_tokens": 79,
+          "total_tokens": 7704,
+          "input_token_details": {
+            "cache_read": 7168
+          },
+          "output_token_details": {}
+        }
+      }
+    },
+    {
+      "type": "tool",
+      "data": {
+        "content": "```json\n[\n  {\n    \"name\": \"Le Comptoir du Relais\",\n    \"city\": \"Paris\",\n    \"cuisine\": \"French\",\n    \"dietary\": \"Gluten-free, Vegetarian\",\n    \"price_per_person\": 25.0,\n    \"operating_hours\": \"12:00-15:00, 19:00-23:00\",\n    \"address\": \"9 Carrefour de l'Od\u00e9on, 75006 Paris\",\n    \"phone\": \"+33 1 46 33 00 01\",\n    \"rating\": 4.2,\n    \"reviews\": [\n      \"Cozy bistro with delicious food\",\n      \"Nice service, good wine selection\"\n    ]\n  },\n  {\n    \"name\": \"Breizh Cafe\",\n    \"city\": \"Paris\",\n    \"cuisine\": \"Creperie, French\",\n    \"dietary\": \"Gluten-free, Vegan\",\n    \"price_per_person\": 15.0,\n    \"operating_hours\": \"11:00-22:00\",\n    \"address\": \"109 Rue Vieille du Temple, 75003 Paris\",\n    \"phone\": \"+33 1 42 72 13 77\",\n    \"rating\": 4.5,\n    \"reviews\": [\n      \"Best crepes in Paris\",\n      \"Friendly staff, nice atmosphere\"\n    ]\n  },\n  {\n    \"name\": \"Le Grand Vefour\",\n    \"city\": \"Paris\",\n    \"cuisine\": \"French, Haute Cuisine\",\n    \"dietary\": \"Gluten-free, Vegetarian\",\n    \"price_per_person\": 50.0,\n    \"operating_hours\": \"12:00-14:30, 19:00-22:30\",\n    \"address\": \"17 Rue du Beaujolais, 75001 Paris\",\n    \"phone\": \"+33 1 42 60 40 20\",\n    \"rating\": 4.8,\n    \"reviews\": [\n      \"Excellent service, impressive wine list\",\n      \"Traditional French cuisine at its best\"\n    ]\n  },\n  {\n    \"name\": \"Holybelly\",\n    \"city\": \"Paris\",\n    \"cuisine\": \"Cafe, French\",\n    \"dietary\": \"Vegetarian, Gluten-free\",\n    \"price_per_person\": 10.0,\n    \"operating_hours\": \"8:00-18:00\",\n    \"address\": \"19 Rue Lucien Sampaix, 75010 Paris\",\n    \"phone\": \"+33 9 81 29 83 38\",\n    \"rating\": 4.6,\n    \"reviews\": [\n      \"Great coffee, nice pastries\",\n      \"Cozy atmosphere, friendly staff\"\n    ]\n  },\n  {\n    \"name\": \"Septime\",\n    \"city\": \"Paris\",\n    \"cuisine\": \"French, Contemporary\",\n    \"dietary\": \"Gluten-free, Vegan\",\n    \"price_per_person\": 60.0,\n    \"operating_hours\": \"19:00-22:00\",\n    \"address\": \"80 Rue de Charonne, 75011 Paris\",\n    \"phone\": \"+33 1 43 67 38 29\",\n    \"rating\": 4.9,\n    \"reviews\": [\n      \"Innovative cuisine, excellent service\",\n      \"Unique dining experience\"\n    ]\n  }\n]\n```",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "tool",
+        "name": null,
+        "id": null,
+        "tool_call_id": "call_00_dzXRsOmY11Nuyl2lCY4shyde",
+        "artifact": null,
+        "status": "success"
+      }
+    },
+    {
+      "type": "ai",
+      "data": {
+        "content": "Based on the available data, I can see there are no Chinese restaurants listed in the current database for Paris. However, let me check the operating hours for Monday to see which restaurants are open:\n\nFrom the operating hours data provided, most restaurants appear to have standard hours that likely apply to Monday:\n\n1. **Le Comptoir du Relais**: Open 12:00-15:00, 19:00-22:30\n2. **Breizh Caf\u00e9**: Open 11:00-22:00  \n3. **Le Grand Vefour**: Open 12:00-14:30, 19:00-22:30\n4. **Holybelly**: Open 8:00-18:00\n5. **Septime**: Open 19:00-22:00\n\nAll appear to be open on Monday based on their listed hours.\n\nNow, for car rental companies under 50 euros per day:\n\nBased on the data I've gathered:\n\n1. **Europcar**:\n   - Economy car: 40.00\u20ac per day, rating 4.2\n   - Sedan: 50.00\u20ac per day, rating 4.5\n\n2. **Sixt**:\n   - SUV: 60.00\u20ac per day, rating 4.0 (over your budget)\n   - Truck: 70.00\u20ac per day, rating 4.1 (over your budget)\n\n3. **Avis**:\n   - Compact: 30.00\u20ac per day, rating 4.3\n   - Luxury: 80.00\u20ac per day, rating 4.6 (over your budget)\n\nFrom the options under 50\u20ac per day:\n- **Avis Compact**: 30.00\u20ac per day, rating 4.3\n- **Europcar Economy**: 40.00\u20ac per day, rating 4.2\n- **Europcar Sedan**: 50.00\u20ac per day, rating 4.5\n\n**The best-rated option under 50\u20ac is Europcar Sedan** with a 4.5 rating at 50\u20ac per day.\n\nFor restaurants, since there are no Chinese restaurants in the database, I need to recommend from the available options. Let me check which restaurants meet your price criteria (under 34\u20ac per person) and have the best ratings:\n\nRestaurants under 34\u20ac per person:\n1. **Breizh Caf\u00e9**: 15.0\u20ac, rating 4.5 (Creperie/French)\n2. **Holybelly**: 10.0\u20ac, rating 4.6 (Cafe/French)\n3. **Le Comptoir du Relais**: 25.0\u20ac, rating 4.2 (French)\n\n**The best-rated restaurant under 34\u20ac is Holybelly** with a 4.6 rating at 10\u20ac per person, but it's a cafe/French cuisine, not Chinese.\n\n**Recommended Restaurant**: Holybelly (4.6 rating, 10\u20ac per person)\n**Recommended Car Rental**: Europcar Sedan (4.5 rating, 50\u20ac per day)\n\nSince you specifically wanted Chinese food, I should note that the database doesn't currently contain any Chinese restaurants in Paris. You might want to:\n1. Check online platforms like TripAdvisor or Google Maps for Chinese restaurants in Paris\n2. Consider alternative Asian cuisines that might be available\n3. Contact Holybelly or other restaurants to see if they offer Chinese-inspired dishes\n\nWould you like me to help you make reservations at Holybelly or book the Europcar Sedan, or would you prefer to explore other options?",
+        "additional_kwargs": {
+          "refusal": null
+        },
+        "response_metadata": {
+          "token_usage": {
+            "completion_tokens": 765,
+            "prompt_tokens": 8458,
+            "total_tokens": 9223,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 7680,
+              "cache_write_tokens": null
+            },
+            "estimated_cost": 0.0014990300000000002
+          },
+          "model_name": "deepseek-ai/DeepSeek-V3.2",
+          "system_fingerprint": null,
+          "id": "chatcmpl-ROGjMNbWEBKq4DfGQOvfNXqG",
+          "service_tier": null,
+          "finish_reason": "stop",
+          "logprobs": null
+        },
+        "type": "ai",
+        "name": null,
+        "id": "run--f3fa83a6-9ec4-4fc4-9ddf-5600bef9ceb8-0",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 8458,
+          "output_tokens": 765,
+          "total_tokens": 9223,
+          "input_token_details": {
+            "cache_read": 7680
+          },
+          "output_token_details": {}
+        }
+      }
+    }
+  ],
+  "retry_count": 0
+}
